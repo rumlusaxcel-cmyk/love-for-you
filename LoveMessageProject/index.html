@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>I LOVE YOU</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
+  <link rel="stylesheet" href="card.css">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Short Stack', cursive;
+    }
+
+    /* Background video */
+    video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -2;
+    }
+
+    /* Blur layer */
+    #blurLayer {
+      position: fixed;
+      inset: 0;
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.4);
+      z-index: 50;
+      display: none;
+    }
+
+    /* Instruksi landscape */
+    #rotateNotice {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      z-index: 100;
+      text-align: center;
+    }
+
+    #rotateIcon {
+      font-size: 80px;
+      animation: rotatePhone 1.5s infinite ease-in-out;
+    }
+
+    @keyframes rotatePhone {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+    }
+
+    /* Lirik */
+    #lyrics {
+      position: fixed;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px;
+      color: white;
+      text-align: center;
+      z-index: 5;
+      text-shadow: 0 0 15px rgba(255,255,255,0.8);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    /* Tombol musik */
+    #startBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 22px;
+      border-radius: 30px;
+      border: none;
+      background: #ff4d6d;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background video -->
+  <video autoplay loop muted preload="auto">
+    <source src="video/ytvideo.mp4" type="video/mp4">
+  </video>
+
+  <!-- Blur & rotate notice -->
+  <div id="blurLayer"></div>
+  <div id="rotateNotice">
+    <div id="rotateIcon">📱</div>
+    <h2>Putar HP ke Landscape</h2>
+    <p>Agar tampilan lebih indah 💕</p>
+  </div>
+
+  <!-- Lirik -->
+  <div id="lyrics"></div>
+
+  <div class="content">
+    <h1></h1>
+  </div>
+
+  <!-- Kartu -->
+  <div class="paper image">
+    <p>naaa kiss</p>
+    <img src="gambar/gambar1.jpg">
+  </div>
+
+  <div class="paper image">
+    <p>eeuummm</p>
+    <img src="gambar/gambar2.jpg">
+  </div>
+
+  <div class="paper image">
+    <p>smile china</p>
+    <img src="gambar/gambar3.jpg">
+  </div>
+
+  <div class="paper image">
+    <p>look my eyes</p>
+    <img src="gambar/gambar4.jpg">
+  </div>
+
+  <!-- Tombol musik -->
+  <button id="startBtn">▶💕 Mulai Musik</button>
+
+  <!-- AUDIO -->
+  <audio id="music" src="audio/music.mp3"></audio>
+
+  <!-- Script kartu -->
+  <script src="card.js"></script>
+
+  <!-- Script musik + lirik -->
+  <script>
+    const music = document.getElementById("music");
+    const lyricsEl = document.getElementById("lyrics");
+    const startBtn = document.getElementById("startBtn");
+
+    const lyrics = [
+      { time: 6, text: "" },
+    ];
+    let index = 0;
+
+    startBtn.addEventListener("click", () => {
+      music.volume = 0.8;
+      music.play();
+      startBtn.style.display = "none";
+    });
+
+    music.addEventListener("timeupdate", () => {
+      if (index < lyrics.length && music.currentTime >= lyrics[index].time) {
+        lyricsEl.style.opacity = 0;
+        setTimeout(() => {
+          lyricsEl.textContent = lyrics[index].text;
+          lyricsEl.style.opacity = 1;
+          index++;
+        }, 300);
+      }
+    });
+
+    /* LANDSCAPE DETECTION */
+    const blur = document.getElementById("blurLayer");
+    const notice = document.getElementById("rotateNotice");
+
+    function checkOrientation() {
+      if (window.innerHeight > window.innerWidth) {
+        blur.style.display = "block";
+        notice.style.display = "flex";
+      } else {
+        blur.style.display = "none";
+        notice.style.display = "none";
+      }
+    }
+
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("load", checkOrientation);
+  </script>
+
+</body>
+</html>
